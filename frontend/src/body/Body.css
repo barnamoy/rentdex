@@ -1,0 +1,11 @@
+*{
+    /* background-color: #C5CAE9; */
+}
+
+li{
+    display: flex;
+    justify-content: center;
+    
+    margin:auto;
+    margin-left: 100px;
+}

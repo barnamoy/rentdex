@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE `cart` ADD COLUMN `name` VARCHAR(191) NOT NULL DEFAULT 'item name',
+    ADD COLUMN `price` VARCHAR(191) NOT NULL DEFAULT '100',
+    ADD COLUMN `seller` VARCHAR(191) NOT NULL DEFAULT 'item seller';
+
+-- AlterTable
+ALTER TABLE `item` MODIFY `id` INTEGER NOT NULL;

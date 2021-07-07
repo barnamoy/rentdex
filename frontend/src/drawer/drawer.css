@@ -1,0 +1,24 @@
+.arrow_img{
+    transform: scaleX(-1);
+    
+}
+.top{
+    height: 64px;
+    justify-content: center;
+    align-items: center;
+
+}
+.top button{
+    float: right;
+}
+
+Drawer{
+    
+}
+.SBC{
+    width:190px;
+    text-align: center;
+}
+.MuiListItemText-root span{
+    text-align: center;
+}

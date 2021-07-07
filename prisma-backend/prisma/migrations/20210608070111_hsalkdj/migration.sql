@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `userinfo` ADD COLUMN `key` VARCHAR(191) NOT NULL DEFAULT '-1';
