@@ -22,9 +22,9 @@ const { exception } = require("console");
 var con = mysql.createConnection({
   host: "localhost",
   port: "3306",
-  password: 'password',
+  password: 'Manager@2021',
   user: "root",
-  database: "testitem",
+  database: "rentdex_db",
 });
 
 // const con = new Sequelize({
@@ -70,7 +70,7 @@ app.get("/", (req, res) => {
     res.send("null");
     return;
   }
-  sql = `select i.id,i.name,i.price,i.description,i.imgurl,i.seller,i.category,i.selleremail,s.address,s.rating,s.ratingcount from item i join seller s on i.selleremail=s.email WHERE i.id=${req.query.id}`;
+  sql = `select i.id,i.name,i.price,i.description,i.imgurl,i.maxduration,u.address,u.email from item i join users u on i.postedby=u.id WHERE i.id=${req.query.id}`;
   con.query(sql, (err, result) => {
     if (err) {
       console.log(err);
@@ -113,12 +113,7 @@ app.get("/items", (req, res) => {
 });
 
 app.post('/items', upload.single('productimg'), async (req, res, next) => {
-  console.log(req)
-  var name = req.body.name
-  var price = req.body.price
-  var description = req.body.description
-  var imgurl = "req.file.filename"
-  console.log(req.headers.authtoken)
+
   let id = ""
   jwt.verify(req.headers.authtoken, "secret", (err, decoded) => {
     if (err) console.log(err)
@@ -126,12 +121,11 @@ app.post('/items', upload.single('productimg'), async (req, res, next) => {
     id = decoded.data
 
   })
-  let seller = await prisma.seller.findFirst({
+  let user = await prisma.users.findFirst({
     where: { id: parseInt(id) }
   })
-  console.log(seller)
-  req.body.seller = seller.store_name
-  req.body.selleremail = seller.email
+  console.log(user)
+  req.body.postedby = user.id;
   req.body.imgurl = req.file.filename
   var obj = await prisma.item.create({
     data: req.body
@@ -142,49 +136,32 @@ app.post('/items', upload.single('productimg'), async (req, res, next) => {
 })
 
 
-app.get("/register", (req, res) => {
-  username = req.query.username;
-  password = req.query.password;
-  bcrypt.hash(password, saltRounds, function (err, hash) {
-    // Store hash in your password DB.
-    if (err) console.log(err);
-    password = hash;
-    sql =
-      "INSERT INTO `users` (`id`, `name`, `password`) VALUES ('" +
-      Math.random() * 10000 +
-      "'" +
-      "," +
-      "'" +
-      username +
-      "'" +
-      "," +
-      "'" +
-      password +
-      "'" +
-      ")";
-    console.log(sql);
-    try {
-      con.query(sql, (err, result) => {
-        if (err) {
-          res.send(JSON.stringify({ status: "404", msg: "error" }));
-          throw err;
-        } else {
-          res.send(JSON.stringify({ status: "200", msg: "done " }));
-        }
-      });
-    } finally {
-      console.log("done");
-    }
-  });
+app.post("/register", async (req, res) => {
+
+  try {
+    let user = await prisma.users.create({
+      data: {
+        email: req.body.username,
+        password: req.body.password,
+        phone: req.body.phone,
+        address: req.body.address
+      }
+    })
+    res.send(user);
+  }
+  finally {
+    console.log("done");
+  }
+
 });
 app.get("/login", (req, res) => {
   username = req.query.username;
   password = req.query.password;
 
-  sql = "SELECT * FROM `users` WHERE name=" + "'" + username + "'";
+  sql = "SELECT * FROM `users` WHERE email=? and password=?";
 
   try {
-    con.query(sql, (err, result) => {
+    con.query(sql, [username, password], (err, result) => {
       if (err) throw err;
       else {
         if (result.length == 0) {
@@ -192,12 +169,8 @@ app.get("/login", (req, res) => {
           res.send(JSON.stringify({ status: "404", msg: "user not valid" }));
           return;
         }
-        bcrypt.compare(password, result[0].password, function (err, docs) {
-          if (docs == false) {
-            res.statusCode = 400
-            res.send(JSON.stringify({ status: "404", msg: "wrong password" }));
-            return;
-          }
+        else {
+          result[0].password = password
           data = jwt.sign(
             {
               data: result[0].id,
@@ -205,141 +178,21 @@ app.get("/login", (req, res) => {
             "secret",
             { expiresIn: "10h" }
           );
-          res.statusCode = 200
-          res.send(JSON.stringify({ status: "ok", token: data }));
-        });
+          console.log(data)
+          res.send(JSON.stringify({ status: "OK", token: data }))
+
+        }
+
       }
+
     });
     // console.log(results ,metadata)
   } finally {
     console.log("done");
   }
 });
-app.get("/addcart", async (req, res) => {
-  item = req.query.id;
-  var url = req.query.url;
-  var number = req.query.number;
-  token = req.headers.authtoken;
-  var sellerName = req.query.seller
-  var selleremail = req.query.selleremail
-  var name = req.query.name
-  var price = req.query.price
-
-  let user = null;
-  console.log('got url for query', url)
-  await jwt.verify(token, "secret", (err, decoded) => {
-    if (err) {
-      console.log(err);
-    }
-    if (decoded.data == undefined) {
-      res.send(JSON.stringify({ error: "no auth token" }));
-    }
-    user = decoded.data;
-  });
-  done = 0;
-  sql =
-    "INSERT INTO `cart` (`item`, `number`, `user`, `done` , `url` , `name` , `price`, `seller` , `selleremail`) VALUES (? , ? , ? ,? ,? , ? , ? , ? , ?)"
 
 
-  try {
-    for(let i =0 ; i < number ; i++ ){
-    con.query(sql, [item, 1, user, 0, url, name, price, sellerName, selleremail], (err, result) => {
-      if (err) {
-        console.log(err)
-        sql2 = "UPDATE `cart` SET number=number+1 WHERE user=? AND item=?"
-        con.query(sql2, [user, item], (err, result) => {
-          if (err) {
-            console.log(err)
-          }
-          else {
-            console.log('inserted data', result)
-          }
-        })
-      };
-
-      console.log(result);
-    });
-  }
-  res.send(JSON.stringify({"status ":"ok"}));
-
-
-  } catch(e) {
-
-
-    console.log("error",e);
-  }
-});
-app.delete('/cart/:id', async (req, res) => {
-  let token = req.headers.authtoken;
-  let id = req.params.id
-  user = null
-  await jwt.verify(token, "secret", (err, decoded) => {
-    if (err) {
-      console.log(err);
-    }
-    if (decoded.data == undefined) {
-      res.send(JSON.stringify({ error: "no auth token" }));
-    }
-    user = decoded.data;
-  });
-  const cart = await prisma.cart.deleteMany({
-    where: {
-      id: parseInt(id)
-    }
-  })
-  res.send(cart)
-})
-app.get("/cart", async (req, res) => {
-  token = req.headers.authtoken;
-  let user = null;
-  //console.log(token)
-  await jwt.verify(token, "secret", (err, decoded) => {
-    if (err) {
-      console.log(err);
-      res.statusCode = 400
-      res.send(JSON.stringify({ "err": "user invalid" }))
-      return;
-    }
-    user = decoded.data;
-  });
-  if (user == null) {
-    return;
-  }
-  else {
-    var cart = await prisma.cart.findMany({
-      where: {
-        user: user,
-        orderNo: 0
-      }
-    })
-    res.send(cart)
-  }
-
-});
-
-
-app.post('/sellerlogin', async (req, res) => {
-  let seller = await prisma.seller.findFirst({
-    where: req.body
-  })
-  data = jwt.sign(
-    {
-      data: seller.id,
-    },
-    "secret",
-    { expiresIn: "10h" }
-  );
-  console.log(data)
-  res.send(JSON.stringify({ status: "OK", token: data, role: "seller" }))
-})
-app.post('/sellerregister', async (req, res) => {
-  console.log(req.body)
-  console.log(req.body)
-  let seller = await prisma.seller.create({
-    data: req.body
-  })
-  res.send(req.body)
-})
 
 
 

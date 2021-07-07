@@ -1,5 +1,5 @@
-import React  from 'react'
-import {withRouter} from 'react-router-dom';
+import React from 'react'
+import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -78,57 +78,57 @@ class SideDrawer extends React.Component {
   static contextTypes = {
     router: PropTypes.object
   }
-  constructor(props)  {
-    super(props ); 
+  constructor(props) {
+    super(props);
     this.handleclick = this.handleclick.bind(this);
     this.state = {
-      link:['/' , '/order' , '/cart' , '/login' , '/logout' , '/aboutus']
+      link: ['/', '/order', '/login', '/logout', '/aboutus']
     }
-    
+
   }
-  
-   handleDrawerOpen = () => {
+
+  handleDrawerOpen = () => {
     this.setState(true);
   };
 
-   handleDrawerClose = () => {
-     console.log("click")
-     this.props.store.set('foo')(false);
+  handleDrawerClose = () => {
+    console.log("click")
+    this.props.store.set('foo')(false);
 
-   };
-   handleclick = (path) =>{
+  };
+  handleclick = (path) => {
     console.log('hi')
-    this.props.history.push( this.state.link[path]);
+    this.props.history.push(this.state.link[path]);
 
-   }
+  }
   render() {
-    
-      return <Drawer
-      
+
+    return <Drawer
+
       variant="persistent"
       anchor="left"
       open={this.props.store.get('foo')}
-      
+
     >
       <div className="top">
         <IconButton onClick={this.handleDrawerClose} >
-        <svg className="arrow_img" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4v3z"/></svg>
+          <svg className="arrow_img" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4v3z" /></svg>
         </IconButton>
       </div>
       <Divider />
       <div className="SBC" >SHOP BY CATEGORY</div>
       <List>
-        {['Home', 'My Orders', 'My Cart',  'Login' , 'Logout','About us'].map((text, index) => (
+        {['Home', 'My Items', 'Login', 'Logout', 'About us'].map((text, index) => (
           <ListItem button key={index}>
             {/* <ListItemIcon>{index % 2 === 0 ? <a /> : <a />}</ListItemIcon> */}
-            <ListItemText primary={text} onClick={()=>this.handleclick(index)} />
+            <ListItemText primary={text} onClick={() => this.handleclick(index)} />
           </ListItem>
         ))}
       </List>
-        <Divider />
-      
-      
+      <Divider />
+
+
     </Drawer>
-    }
   }
-  export default withRouter(store.withStore( SideDrawer))
+}
+export default withRouter(store.withStore(SideDrawer))

@@ -76,16 +76,6 @@ class Body extends React.Component {
         </div>
       </div>
       <div class="row">
-        <div class="col-2 " > 
-          <div class="container border shadow-lg p-3 mb-5 bg-white rounded">
-            <h2 className="col">Category</h2>
-            {
-              this.state.catagory.map((item, index) => (
-                <div><img src={this.state.icons[index]} width="30px" height="30px"></img> <button onClick={() => this.handleCat(index)} class='btn m-3'>{item}</button></div>
-              ))
-            }
-          </div>
-        </div>
         <div class="col">
           {
             items.map(item => (
@@ -97,12 +87,7 @@ class Body extends React.Component {
             ))
           }
         </div>
-        <df-messenger
-  intent="WELCOME"
-  chat-title="CartEasy"
-  agent-id="64bb28e5-47c4-4d63-af1b-66ceee01fabe"
-  language-code="en"
-></df-messenger>
+
       </div>
     </div>
 

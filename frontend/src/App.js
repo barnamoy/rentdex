@@ -6,7 +6,7 @@ import Body from './body/Body.jsx'
 import Product from './product/product'
 import Login from './login/login'
 import register from './register/register'
-import cart from './cart/cart'
+
 import SideDrawer from './drawer/drawer'
 import dashboard from './dashboard/dashboard'
 import axios from "axios";
@@ -15,7 +15,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Store from './mystore'
 import additem from './additem/additem'
-import sellerregister from './sellerregister/sellerregister';
 
 
 function hello(jwt) {
@@ -43,9 +42,7 @@ function App(props) {
           <Route path="/product/:id" component={Product} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={register} />
-          <Route path="/cart" component={cart} />
           <Route path="/additem" component={additem} />
-          <Route path="/sellerregister" component={sellerregister} />
           <Route path="/dashboard" component={dashboard} />
           
 

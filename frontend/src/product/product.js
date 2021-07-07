@@ -14,12 +14,7 @@ class product extends React.Component {
     let from = new URLSearchParams(this.props.location.search).get("from");
     console.log(from);
     let id = props.match.params.id;
-    this.cartClick = this.cartClick.bind(this);
-    this.button_text = "Add to the cart";
-    if (from == "cart") {
-      this.button_text = "already in the cart";
-      console.log(this.button_text);
-    }
+
     this.state = {
       rating: 0.0,
       isLoaded: false,
@@ -28,76 +23,18 @@ class product extends React.Component {
       number: 1
     };
     axios("http://localhost:4000?id=" + id).then((result) => {
-      if(result.data[0].ratingcount==0)
-      {
-        // result.data[0].ratingcount=1;
-        this.setState({
-          rating: 0,
-          isLoaded: true,
-          data: result.data[0],
-        });
+      console.log(result);
 
-      }
-      else{
-        this.setState({
-          rating: result.data[0].rating / result.data[0].ratingcount,
-          isLoaded: true,
-          data: result.data[0],
-        });
-      }
-      
+      this.setState({
+        isLoaded: true,
+        data: result.data[0],
+      });
+
+
       console.log('this state is ', this.state);
     });
   }
-  cartClick() {
-    console.log(this.state);
-    if (!localStorage.getItem("jwt")) {
-      this.props.history.push("/login");
-      return;
-    }
-    axios("http://localhost:4000/addcart/", {
-      params: {
-        id: this.state.id,
-        number: this.state.number,
-        url: this.state.data.imgurl,
-        name: this.state.data.name,
-        seller: this.state.data.seller,
-        price: this.state.data.price,
-        selleremail: this.state.data.selleremail
-      },
-    }).then((result, err) => {
-      if (err) return
-      else {
-        console.log(result.data)
-        this.props.history.push('/')
-      }
-    });
-  }
-  buyNow = () => {
-    // console.log(this.state);
-    if (!localStorage.getItem("jwt")) {
-      this.props.history.push("/login");
-      return;
-    }
-    axios("http://localhost:4000/addcart/", {
-      params: {
-        id: this.state.id,
-        number: this.state.number,
-        url: this.state.data.imgurl,
-        name: this.state.data.name,
-        seller: this.state.data.seller,
-        price: this.state.data.price,
-        selleremail: this.state.data.selleremail
-      },
-    }).then((result, err) => {
-      if (err) return
-      else {
-        console.log(result.data)
-        this.props.history.push('/cart')
-      }
-    });
 
-  }
   render() {
     const { isLoaded, data } = this.state;
 
@@ -154,20 +91,10 @@ class product extends React.Component {
             <div class="text-dark col float-right" >
               <div><h4 style={{ 'font-size': '24px', 'font-weight': 'bold' }}>{this.state.data.name}</h4></div>
 
-              <StarRatings
-                rating={this.state.rating}
-                starDimension='30px'
-                starRatedColor="rgb(255, 200, 0)"
-                changeRating={this.changeRating}
-                numberOfStars={5}
-                name='rating'
-              /> <span style={{ fontSize: '25px' }}>({this.state.data.ratingcount})</span>
-
               <br />
               <div class="my-2" style={{ 'font-size': '23px', 'font-weight': 'bold' }}>Price: ₹ {this.state.data.price}</div>
-              <div class="my-2 text-danger" style={{ 'font-size': '20px' }}>Seller Name: {this.state.data.seller}</div>
-              <div class="my-2 text-danger" style={{ 'font-size': '20px' }}>Seller email: <a href={'mailto:' + this.state.data.selleremail}>{this.state.data.selleremail}</a></div>
-              <div class="my-2 text-danger" style={{ 'font-size': '20px' }}>Seller Address: {this.state.data.address}</div>
+              <div class="my-2 text-danger" style={{ 'font-size': '20px' }}>Giver email: <a href={'mailto:' + this.state.data.email}>{this.state.data.email}</a></div>
+              <div class="my-2 text-danger" style={{ 'font-size': '20px' }}>Giver Address: {this.state.data.address}</div>
               <div class="my-4" style={{ 'font-size': '20px' }}>
                 <b>Description:</b><br /> {this.state.data.description}
               </div>
@@ -184,8 +111,7 @@ class product extends React.Component {
                 <button class="btn btn-primary col-1 m-1" onClick={() => { this.setState({ number: this.state.number + 1 }) }} >+</button>
               </div>
               <div class="row">
-                <button class="btn btn-primary col mx-2" onClick={this.cartClick}>Add to cart</button>
-                <button class="btn btn-secondary col mx-2" onClick={this.buyNow}>Buy Now</button>
+                <button class="btn btn-secondary col mx-2" >Rent</button>
               </div>
             </div>
           </div>

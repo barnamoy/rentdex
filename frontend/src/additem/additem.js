@@ -12,13 +12,11 @@ class additem extends React.Component {
     this.nameInput = React.createRef();
     this.priceInput = React.createRef();
     this.descriptioninput = React.createRef();
-    this.sellerInput = React.createRef();
-    this.catInput = React.createRef();
+    this.maxduration = React.createRef();
 
 
     this.state = {
-      selectedFile: null,
-      selectedCat: null
+      selectedFile: null
     }
   }
   componentDidMount() {
@@ -27,12 +25,7 @@ class additem extends React.Component {
 
   }
 
-  onselectchange = event => {
-    console.log(event.target.value)
-    this.setState({
-      selectedCat: event.target.value
-    })
-  }
+
   onFileChange = event => {
 
     // Update the state
@@ -41,13 +34,11 @@ class additem extends React.Component {
   };
   onFileUpload = () => {
     console.log("here")
-    if(this.state.selectedFile==null||this.state.selectedCat==null||this.nameInput.current.value==""||this.priceInput.current.value==""||this.descriptioninput.current.value=="")
-    {
+    if (this.state.selectedFile == null || this.nameInput.current.value == "" || this.priceInput.current.value == "" || this.descriptioninput.current.value == "") {
       alert("Please fill the form correctly");
       return;
     }
-    if(this.state.selectedFile.type!="image/png" && this.state.selectedFile.type!="image/jpeg" && this.state.selectedFile.type!="image/jpg" )
-    {
+    if (this.state.selectedFile.type != "image/png" && this.state.selectedFile.type != "image/jpeg" && this.state.selectedFile.type != "image/jpg") {
       alert(`Please upload an image (jpg or png)`);
       return;
     }
@@ -77,16 +68,17 @@ class additem extends React.Component {
 
     );
     formData.append(
-      "category",
-      this.state.selectedCat,
+      "maxduration",
+      this.maxduration.current.value,
 
     );
 
-    
+
+
     // Details of the uploaded file
     console.log(this.state.selectedFile.type);
     // console.log(this.catInput.current.selectVal)
-   
+
     axios.post('http://localhost:4000/items', formData).then(res => {
       console.log(res)
       this.props.history.push("/dashboard");
@@ -98,8 +90,8 @@ class additem extends React.Component {
       <div class="container my-3 ">
 
         <div class="form-group">
-          <label for="exampleInputEmail1">Product Name</label>
-          <input ref={this.nameInput} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Product Name" />
+          <label for="exampleInputEmail1">Item Name</label>
+          <input ref={this.nameInput} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Item Name" />
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Price</label>
@@ -113,24 +105,9 @@ class additem extends React.Component {
 
 
         <div class="form-group">
-          <label for="exampleInputPassword1">Category</label>
+          <label for="exampleInputPassword1">Max Duration</label>
           <br />
-          <Select onChange={this.onselectchange} type="text" class="form-control" id="exampleInputPassword1" placeholder="category">
-            <option value="Drinking Water">Drinking Water</option>
-            <option value="Fruits & Vegetables">Fruits & Vegetables</option>
-            <option value="Glasses">Glasses</option>
-            <option value="Toys">Toys</option>
-            <option value="Mobiles">Mobiles</option>
-            <option value="Fashion">Fashion</option>
-            <option value="Furniture">Furniture</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Books">Books</option>
-            <option value="Groceries">Groceries</option>
-            <option value="Appliances">Appliances</option>
-            <option value="Medicines">Medicines</option>
-
-
-          </Select>
+          <input ref={this.maxduration} type="text" class="form-control" placeholder="Maximum Duration" />
         </div>
 
         <div class="form-group">

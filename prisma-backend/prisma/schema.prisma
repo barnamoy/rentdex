@@ -7,21 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model cart {
-  id          Int    @id @default(autoincrement())
-  item        Int
-  url         String
-  number      Int
-  user        Int
-  name        String @default("item name")
-  price       String @default("100")
-  seller      String @default("item seller")
-  selleremail String @default("item seller")
-  orderNo     Int    @default(0)
-  done        Int    @default(0)
-  isratedbydeliveryboy     Int  @default(0)
-  isratedbyuser Int @default(0)
-}
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model item {
@@ -30,53 +15,19 @@ model item {
   price       String
   description String @db.VarChar(255)
   imgurl      String @db.VarChar(100)
-  seller      String @db.VarChar(100)
-  category    String @default("None") @db.VarChar(100)
-  selleremail String @default("None") @db.VarChar(100)
+  maxduration String @db.VarChar(255)
+  postedby    Int
 
 }
 
-model seller {
-  id         Int    @id @default(autoincrement())
-  address    String
-  store_name String
-  phone      String
-  email      String
-  password   String
-  rating     Int  @default(0)
-  ratingcount Int @default(0)
-
-}
-
-model orderinfo {
-  userid    Int
-  addressid String
-  orderid   Int      @unique @default(autoincrement())
-  completed Int      @default(0)
-  createdAt DateTime @default(now())
-
-}
-
-model userinfo {
-  id      Int    @id @default(autoincrement())
-  name    String @db.VarChar(200)
-  phone   String @db.VarChar(200)
-  address String @db.VarChar(200)
-  email   String @db.VarChar(200)
-  orderid String @default("None") @db.VarChar(200)
-
-}
 
 model users {
-  id       Int    @id
-  name     String @db.VarChar(255)
+  id       Int    @id @default(autoincrement())
+  email     String @db.VarChar(255)
   password String @db.VarChar(255)
+  phone    String @db.VarChar(255)
+  address  String @db.VarChar(255)
   type     String @default("user") @db.VarChar(255)
 }
 
-model deliveryboy {
-  id       Int    @id @default(autoincrement())
-  email    String @unique @db.VarChar(255)
-  password String @db.VarChar(255)
-  taskid   Int    @default(-1)
-}
+

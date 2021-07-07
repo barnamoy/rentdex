@@ -69,41 +69,21 @@ class Login extends React.Component {
   }
   handleSubmit = (event) => {
     console.log('props are', this.props)
-    if(this.state.username=="" || this.state.password=="" )
-    {
+    if (this.state.username == "" || this.state.password == "") {
       alert("Please fill the form correctly");
-      return ;
+      return;
     }
     // return
-    if (this.state.checkbox == true) {
-      axios.post('http://localhost:4000/sellerlogin', { email: this.state.username, password: this.state.password }).then(res => {
-        console.log(res)
-        if (res.data.status === 'OK') {
-          console.log("testing login for seller")
-          localStorage.setItem('jwt', res.data.token);
-          localStorage.setItem('role', res.data.role);
-          axios.defaults.headers.common['authtoken'] = res.data.token
-
-          this.props.history.push("/dashboard");
-        }
-      })
-      event.preventDefault();
-      return
-    }
 
     axios('http://localhost:4000/login?username=' + this.state.username + '&&password=' + this.state.password).then(result => {
       console.log(result.data)
-      if (result.data.status === 'ok') {
-        localStorage.setItem('jwt', result.data.token);
 
-        localStorage.setItem('role', "user");
-        axios.defaults.headers.common['authtoken'] = result.data.token
-        this.inputRef.current.seterr("success")
-        this.props.history.push("/");
-      }
-      else {
-        this.inputRef.current.seterr("something went wrong")
-      }
+      localStorage.setItem('jwt', result.data.token);
+
+      localStorage.setItem('role', "user");
+      axios.defaults.headers.common['authtoken'] = result.data.token
+      this.inputRef.current.seterr("success")
+      this.props.history.push("/dashboard");
 
     }).catch(error => {
       // We want to handle globally
@@ -146,10 +126,6 @@ class Login extends React.Component {
             id="password"
             autoComplete="current-password"
             onChange={this.handlePassword}
-          />
-          <FormControlLabel
-            control={<Checkbox onChange={this.handlecheckbox} value="remember" color="primary" />}
-            label="Login As a Seller"
           />
           <Button
             type="submit"

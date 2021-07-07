@@ -1,25 +1,8 @@
-// import React , {useState } from 'react'
-// import {Bootstrap, Navbar,Form,InputGroup,FormControl,Button} from 'react-bootstrap';
+
 import './header.css'
 import store from './../mystore'
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom'
-// class Header extends React.Component {
-//   constructor(props){
-//     super(props)
 
-//    }
-//    render() {
-//       return <div> 
-//       <Navbar className="bg-light justify-content-between">
-//         {/* <Button ></Button> */}
-//         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" onClick ={()=>this.props.store.set('foo')(true)} ><path d="M0 0h24v24H0V0zm0 0h24v24H0V0z" fill="none"/><path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/></svg>
-//     </Navbar>
-//     </div>
-
-//       }
-//   }
-//   export default store.withStore( Header)
 import React from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -247,11 +230,7 @@ export default function Header(props) {
               </Badge>
             </IconButton>
 
-            <IconButton color="inherit">
-              <Badge color="secondary">
-                <Link to="/cart" replace="true" style={{ textDecoration: 'none', color: 'black' }}><ShoppingCartIcon /></Link>
-              </Badge>
-            </IconButton>
+       
 
 
 
