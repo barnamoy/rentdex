@@ -19,6 +19,7 @@ const { exception } = require("console");
 const AdvertisementManager = require('./AdvertisementManager/AdvertisementManager')
 const RentManager = require('./RentManager/RentManager')
 
+const PaymentManager = require('./PaymentManager/PaymentManager')
 
 
 var con = mysql.createConnection({
@@ -157,33 +158,16 @@ app.get("/login", (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-app.get('/prisma', async (req, res) => {
-  var user = await prisma.seller.findMany()
-  res.send(JSON.stringify(user))
+app.post("/payment" , (req,res)=>{
+  let payment = new PaymentManager()
+  payment.makePayment(req,res)
 })
-app.post('/prisma', async (req, res) => {
-  try {
-    var user = await prisma.con.create({
-      data: req.body
-    })
-  }
-  catch (err) {
-    console.log("there is an error " + err)
-    res.statusCode = 400
-    res.send('error')
-  }
 
 
-  res.send(JSON.stringify(user))
-})
+
+
+
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

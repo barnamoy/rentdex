@@ -9,7 +9,7 @@ class dashboard extends React.Component {
   constructor(props) {
     super(props)
     if (localStorage.getItem("role") == "seller") {
-      this.fetchSellerInfo();
+      // this.fetchSellerInfo();
     }
     this.state = {
       sellerrating: 0,
