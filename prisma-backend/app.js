@@ -22,7 +22,6 @@ const { exception } = require("console");
 var con = mysql.createConnection({
   host: "localhost",
   port: "3306",
-  password: 'Manager@2021',
   user: "root",
   database: "rentdex_db",
 });
