@@ -1,4 +1,6 @@
 import React from "react";
+import Button from "react-bootstrap/Button"
+import {useState} from "react"
 import "./product.css";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
@@ -7,6 +9,11 @@ import StarIcon from "@material-ui/icons/Star";
 import StarHalfIcon from "@material-ui/icons/StarHalf";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import StarRatings from "react-star-ratings";
+import { makeStyles } from '@material-ui/core/styles';
+import Modal from 'react-bootstrap/Modal'
+import { Slider } from "@material-ui/core";
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl  from 'react-bootstrap/FormControl'
 
 class product extends React.Component {
   constructor(props) {
@@ -16,11 +23,12 @@ class product extends React.Component {
     let id = props.match.params.id;
 
     this.state = {
-      rating: 0.0,
+      show:false,
       isLoaded: false,
       id: id,
       data: {},
-      number: 1
+      number: 1,
+      duration:0
     };
     axios("http://localhost:4000/getadvertisementbyid?id=" + id).then((result) => {
       console.log(result);
@@ -33,6 +41,27 @@ class product extends React.Component {
 
       console.log('this state is ', this.state);
     });
+  }
+  handleClose=()=>{
+
+  }
+  handleSubmit=()=> {
+
+    if (this.state.duration == 0 ) {
+      alert("Please fill the form correctly");
+      return;
+    }
+    console.log(this.state)
+
+    let id = this.props.match.params.id;
+    
+    axios.post('http://localhost:4000/addrent?duration=' , {adid:parseInt(id) , giverid: this.state.data.postedby , duration:parseInt( this.state.duration)}).then(result => {
+      console.log(result)
+
+      this.props.history.push("/dashboard")
+
+    })
+    
   }
 
   render() {
@@ -111,13 +140,35 @@ class product extends React.Component {
                 <button class="btn btn-primary col-1 m-1" onClick={() => { this.setState({ number: this.state.number + 1 }) }} >+</button>
               </div>
               <div class="row">
-                <button class="btn btn-secondary col mx-2" >Rent</button>
+                <button class="btn btn-secondary col mx-2" onClick={()=>{this.setState({show:true})}} >Rent</button>
+                                  <Modal show={this.state.show}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Modal title</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                      <p>Enter the Duration of the Rent.</p>
+                      <InputGroup size="sm" className="mb-3">
+    {/* <InputGroup.Text id="inputGroup-sizing-sm">Duration</InputGroup.Text> */}
+    <FormControl aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={(event)=>{this.setState({duration:event.target.value})}} />
+  </InputGroup>
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                      <Button variant="secondary"  onClick={()=>{this.setState({show:false})}} >Close</Button>
+                      <Button variant="primary "  onClick={this.handleSubmit}>Save changes</Button>
+                    </Modal.Footer>
+                  </Modal>
               </div>
             </div>
           </div>
         </div>
+
+        
       </div>
     );
   }
 }
+
+
 export default product;
