@@ -9,7 +9,7 @@ datasource db {
 
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model item {
+model Advertisement {
   id          Int    @id @default(autoincrement())
   name        String @db.VarChar(255)
   price       String

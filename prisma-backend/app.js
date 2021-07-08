@@ -15,7 +15,7 @@ const saltRounds = 10;
 const prisma = new PrismaClient()
 var mysql = require("mysql");
 const { exception } = require("console");
-
+const AdvertisementManager = require('./AdvertisementManager/AdvertisementManager')
 
 
 
@@ -64,74 +64,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", (req, res) => {
-  if (req.query.id === undefined) {
-    res.send("null");
-    return;
-  }
-  sql = `select i.id,i.name,i.price,i.description,i.imgurl,i.maxduration,u.address,u.email from item i join users u on i.postedby=u.id WHERE i.id=${req.query.id}`;
-  con.query(sql, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.statusCode = 200
-      res.send(result);
-    }
-  });
+app.get("/getadvertisementbyid", (req, res) => {
+  let ad = new AdvertisementManager()
+  ad.getAdvertisementById(req,res)
 });
 
 app.get("/items", (req, res) => {
-  if (req.query.search === "" || req.query.search == undefined) {
-    con.query("select * from item", (err, result) => {
-      if (err) throw err;
-      else {
-        authtoken = req.headers.authtoken;
-        console.log(authtoken);
-        jwt.verify(authtoken, "secret", function (err, decoded) {
-          //console.log(decoded.data) // bar
-        });
-        res.send(result);
-      }
-    });
-  }
-  else {
-    con.query("select * from item where name LIKE ? OR category LIKE ?", ['%' + req.query.search + '%', '%' + req.query.search + '%'], (err, result) => {
-      if (err) {
-        console.log(err)
-      }
-      else {
-        authtoken = req.headers.authtoken;
-        console.log(authtoken);
-        jwt.verify(authtoken, "secret", function (err, decoded) {
-          //console.log(decoded.data) // bar
-        });
-        res.send(result);
-      }
-    });
-  }
+  let ad =new AdvertisementManager()
+  ad.getAllAdvertisement(req,res)
 });
 
 app.post('/items', upload.single('productimg'), async (req, res, next) => {
-
-  let id = ""
-  jwt.verify(req.headers.authtoken, "secret", (err, decoded) => {
-    if (err) console.log(err)
-    console.log(decoded.data)
-    id = decoded.data
-
-  })
-  let user = await prisma.users.findFirst({
-    where: { id: parseInt(id) }
-  })
-  console.log(user)
-  req.body.postedby = user.id;
-  req.body.imgurl = req.file.filename
-  var obj = await prisma.item.create({
-    data: req.body
-  })
-  res.send(obj)
-
-
+  let ad = new AdvertisementManager()
+  ad.addAdvertisement(req,res)
 })
 
 
