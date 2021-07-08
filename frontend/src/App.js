@@ -15,6 +15,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Store from './mystore'
 import additem from './additem/additem'
+import payment from './payment/payment';
 
 
 function hello(jwt) {
@@ -44,6 +45,7 @@ function App(props) {
           <Route path="/register" component={register} />
           <Route path="/additem" component={additem} />
           <Route path="/dashboard" component={dashboard} />
+          <Route path="/payment" component={payment} />
           
 
           <Route path="/">

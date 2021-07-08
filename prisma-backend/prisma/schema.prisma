@@ -30,4 +30,8 @@ model users {
   type     String @default("user") @db.VarChar(255)
 }
 
+model payment{
+  id    Int @id @default(autoincrement())
+  advertisementid  Int
+}
 
