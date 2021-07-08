@@ -11,7 +11,6 @@ class AdvertisementManager {
         this.con = mysql.createConnection({
             host: "localhost",
             port: "3306",
-            password: 'password',
             user: "root",
             database: "rentdex_db",
         });
@@ -23,7 +22,7 @@ class AdvertisementManager {
             res.send("null");
             return;
         }
-        this.sql = `select i.id,i.name,i.price,i.description,i.imgurl,i.maxduration,u.address,u.email from Advertisement i join users u on i.postedby=u.id WHERE i.id=${req.query.id}`;
+        this.sql = `select i.id,i.name,i.price,i.description,i.imgurl,i.maxduration,i.postedby,u.address,u.email from Advertisement i join users u on i.postedby=u.id WHERE i.id=${req.query.id}`;
         this.con.query(this.sql, (err, result) => {
             if (err) {
                 console.log(err);
@@ -69,7 +68,6 @@ class AdvertisementManager {
       this.con = mysql.createConnection({
         host: "localhost",
         port: "3306",
-        password: 'password',
         user: "root",
         database: "rentdex_db",
     });

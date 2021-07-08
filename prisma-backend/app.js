@@ -1,3 +1,4 @@
+
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -16,6 +17,7 @@ const prisma = new PrismaClient()
 var mysql = require("mysql");
 const { exception } = require("console");
 const AdvertisementManager = require('./AdvertisementManager/AdvertisementManager')
+const RentManager = require('./RentManager/RentManager')
 
 
 
@@ -68,6 +70,25 @@ app.get("/getadvertisementbyid", (req, res) => {
   let ad = new AdvertisementManager()
   ad.getAdvertisementById(req,res)
 });
+app.get("/getrentbyid", (req, res) => {
+  let rent = new RentManager()
+  rent.getRentById(req,res)
+});
+
+
+app.get("/getallrent", (req, res) => {
+  let allrent = new RentManager()
+  allrent.getAllRent(req,res)
+});
+
+
+
+app.post("/addrent", (req, res) => {
+  let allrent = new RentManager()
+  allrent.addRent(req,res)
+});
+
+
 
 app.get("/items", (req, res) => {
   let ad =new AdvertisementManager()

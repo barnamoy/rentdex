@@ -29,5 +29,14 @@ model users {
   address  String @db.VarChar(255)
   type     String @default("user") @db.VarChar(255)
 }
+model  rent {
+
+  rentid      Int    @id @default(autoincrement())
+  giverid   Int    
+  takerid   Int  
+  duration   Int 
+  adid      Int    
+  done    Boolean
+}
 
 
