@@ -22,7 +22,7 @@ class product extends React.Component {
       data: {},
       number: 1
     };
-    axios("http://localhost:4000?id=" + id).then((result) => {
+    axios("http://localhost:4000/getadvertisementbyid?id=" + id).then((result) => {
       console.log(result);
 
       this.setState({

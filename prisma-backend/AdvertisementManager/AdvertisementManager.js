@@ -13,7 +13,7 @@ class AdvertisementManager {
             port: "3306",
             password: 'password',
             user: "root",
-            database: "testitem",
+            database: "rentdex_db",
         });
         this.con.connect(function (err) {
             if (err) throw err;
@@ -23,7 +23,7 @@ class AdvertisementManager {
             res.send("null");
             return;
         }
-        this.sql = `select i.id,i.name,i.price,i.description,i.imgurl,i.seller,i.category,i.selleremail,s.address,s.rating,s.ratingcount from item i join seller s on i.selleremail=s.email WHERE i.id=${req.query.id}`;
+        this.sql = `select i.id,i.name,i.price,i.description,i.imgurl,i.maxduration,u.address,u.email from Advertisement i join users u on i.postedby=u.id WHERE i.id=${req.query.id}`;
         this.con.query(this.sql, (err, result) => {
             if (err) {
                 console.log(err);
@@ -49,12 +49,58 @@ class AdvertisementManager {
         console.log(user)
         req.body.postedby = user.id;
         req.body.imgurl = req.file.filename
-        var obj = await this.prisma.item.create({
+        var obj = await this.prisma.advertisement.create({
           data: req.body
         })
         res.send(obj)
 
 
+    }
+    approveAdvertisement(req,res){
+        if(payment){
+            return true;
+
+        }
+        else{
+            return false
+        }
+    }
+    getAllAdvertisement(req ,res){
+      this.con = mysql.createConnection({
+        host: "localhost",
+        port: "3306",
+        password: 'password',
+        user: "root",
+        database: "rentdex_db",
+    });
+    this.con.connect(function (err) {
+        if (err) throw err;
+        console.log(" sql db Connected!");
+    });
+        if (req.query.search === "" || req.query.search == undefined) {
+            this.con.query("select * from Advertisement", (err, result) => {
+              if (err) throw err;
+              else {
+               
+                res.send(result);
+              }
+            });
+          }
+          else {
+            this.con.query("select * from Advertisement where name LIKE ? OR category LIKE ?", ['%' + req.query.search + '%', '%' + req.query.search + '%'], (err, result) => {
+              if (err) {
+                console.log(err)
+              }
+              else {
+                authtoken = req.headers.authtoken;
+                console.log(authtoken);
+                jwt.verify(authtoken, "secret", function (err, decoded) {
+                  //console.log(decoded.data) // bar
+                });
+                res.send(result);
+              }
+            });
+          }
     }
 
 
