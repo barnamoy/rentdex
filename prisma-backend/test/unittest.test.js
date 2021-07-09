@@ -1,18 +1,18 @@
 let chai = require("chai");
 let chaiHttp = require("chai-http");
 let server = require("./../app");
-
+const fs = require('fs')
 //Assertion Style
 chai.should();
 
 chai.use(chaiHttp);
-
+let token_test="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjozLCJpYXQiOjE2MjU4NDQwODksImV4cCI6MTYyNTg4MDA4OX0.MvkXh2Ahws0yxlMk7I6P-IgfJHr1nKbvbev-EbjDp7s"
 describe('RentDex API', () => {
 
     describe("GET /login", () => {
         it("Login Test", (done) => {
             chai.request(server)
-                .get("/login?username=abc@gmail.com&password=123")
+                .get("/login?username=test3&password=123")
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('object');
@@ -71,7 +71,7 @@ describe('RentDex API', () => {
 
     describe("GET /getallrent", () => {
         it("It should get all the items rented by a particular user", (done) => {
-            chai.request(server).get("/getallrent").set('authtoken','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoxLCJpYXQiOjE2MjU4MzI3MDcsImV4cCI6MTYyNTg2ODcwN30.Tcg4HAP1YwI4m8mMgCup8eWx6ajlO0uaZKycZzvme-0' ).end((err, response) => {
+            chai.request(server).get("/getallrent").set('authtoken', token_test).end((err, response) => {
                 response.should.have.status(200);
                 response.body.should.be.a('array');
                 const obj = response.body[0]
@@ -93,7 +93,7 @@ describe('RentDex API', () => {
 
 
     });
-    
+
 
     describe("GET /getrentbyid", () => {
         it("It should get all the rented items by id", (done) => {
@@ -127,7 +127,7 @@ describe('RentDex API', () => {
                 "password": "123",
                 "password_conf": "123",
                 "phone": "12345",
-                "username": "test3"
+                "username": "test4"
             }).end((err, response) => {
                 response.should.have.status(200);
                 const obj = response.body
@@ -153,20 +153,72 @@ describe('RentDex API', () => {
     describe("POST /addrent", () => {
         it("It should add a rent", (done) => {
             chai.request(server).post("/addrent").send({
-                "adid": 2,
+                "adid": 4,
                 "duration": 57,
                 "giverid": 1
-            }).set({'authtoken': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoxLCJpYXQiOjE2MjU4MzI3MDcsImV4cCI6MTYyNTg2ODcwN30.Tcg4HAP1YwI4m8mMgCup8eWx6ajlO0uaZKycZzvme-0"})
-            .end((err, response) => {
+            }).set({ 'authtoken': token_test })
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    const obj = response.body
+                    obj.should.be.a('object');
+                    obj.should.have.property('rentid');
+                    obj.should.have.property('giverid');
+                    obj.should.have.property('takerid');
+                    obj.should.have.property('duration');
+                    obj.should.have.property('adid');
+                    obj.should.have.property('done');
+
+
+
+                    done()
+                });
+        });
+
+
+
+    });
+
+
+    describe("POST /items", () => {
+        it("It should post an advertisement", (done) => {
+            chai.request(server).post("/items").attach('productimg', fs.readFileSync('./test/water.jpg'), 'water.jpg')
+                .field({
+                    "name": "water form test",
+                    "price": "500",
+                    "description": "pure",
+                    "maxduration": 5
+                }).set({ 'authtoken': token_test })
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    const obj = response.body
+                    obj.should.be.a('object');
+                    obj.should.have.property('id');
+                    obj.should.have.property('name');
+                    obj.should.have.property('price');
+                    obj.should.have.property('description');
+                    obj.should.have.property('imgurl');
+                    obj.should.have.property('maxduration');
+                    obj.should.have.property('postedby');
+
+
+
+                    done()
+                });
+        });
+
+
+
+    });
+
+    describe("POST /payment", () => {
+        it("It should add a payment fee", (done) => {
+            chai.request(server).post("/payment").send({
+                "id": 1
+            }).end((err, response) => {
                 response.should.have.status(200);
                 const obj = response.body
                 obj.should.be.a('object');
-                obj.should.have.property('rentid');
-                obj.should.have.property('giverid');
-                obj.should.have.property('takerid');
-                obj.should.have.property('duration');
-                obj.should.have.property('adid');
-                obj.should.have.property('done');
+
 
 
 
@@ -176,35 +228,7 @@ describe('RentDex API', () => {
 
 
 
-});
-
-describe("POST /addrent", () => {
-    it("It should add a rent", (done) => {
-        chai.request(server).post("/addrent").send({
-            "adid": 2,
-            "duration": 57,
-            "giverid": 1
-        }).set({'authtoken': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoxLCJpYXQiOjE2MjU4MzI3MDcsImV4cCI6MTYyNTg2ODcwN30.Tcg4HAP1YwI4m8mMgCup8eWx6ajlO0uaZKycZzvme-0"})
-        .end((err, response) => {
-            response.should.have.status(200);
-            const obj = response.body
-            obj.should.be.a('object');
-            obj.should.have.property('rentid');
-            obj.should.have.property('giverid');
-            obj.should.have.property('takerid');
-            obj.should.have.property('duration');
-            obj.should.have.property('adid');
-            obj.should.have.property('done');
-
-
-
-            done()
-        });
     });
-
-
-
-});
 
 
 });
