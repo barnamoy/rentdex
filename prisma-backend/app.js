@@ -26,6 +26,7 @@ var con = mysql.createConnection({
   host: "localhost",
   port: "3306",
   user: "root",
+  password:"Manager@2021",
   database: "rentdex_db",
 });
 

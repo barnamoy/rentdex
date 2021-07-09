@@ -109,7 +109,7 @@ export default function Header(props) {
   };
   const handleLogout = () => {
     localStorage.removeItem('jwt');
-    localStorage.setItem("role","user");
+    localStorage.setItem("role", "user");
     // props.history.push('/')
     handleMenuClose();
 
@@ -136,6 +136,7 @@ export default function Header(props) {
       onClose={handleMenuClose}
     >
       <Link to="login"><MenuItem onClick={handleLogin}  >Login</MenuItem></Link>
+      <Link to="register"><MenuItem onClick={handleLogin}  >Register</MenuItem></Link>
       <Link to="login"><MenuItem onClick={handleLogout}>Logout</MenuItem></Link>
 
     </Menu>
@@ -192,7 +193,7 @@ export default function Header(props) {
 
   return (
     <div className={classes.grow}>
-      <AppBar className="appbar" position="static" style={{background:'#ffeb3b'}} >
+      <AppBar className="appbar" position="static" style={{ background: '#ffeb3b' }} >
         <Toolbar>
           <IconButton
             edge="start"
@@ -224,13 +225,9 @@ export default function Header(props) {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton color="inherit">
-              <Badge color="secondary" >
-                <Link to="/dashboard" replace="true" style={{ textDecoration: 'none', color: 'black', fontSize: '20px' }}><span  >Dashboard</span></Link>
-              </Badge>
-            </IconButton>
 
-       
+
+
 
 
 

@@ -8,7 +8,6 @@ import Login from './login/login'
 import register from './register/register'
 
 import SideDrawer from './drawer/drawer'
-import dashboard from './dashboard/dashboard'
 import axios from "axios";
 import { useState, useRef } from 'react'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -44,7 +43,6 @@ function App(props) {
           <Route path="/login" component={Login} />
           <Route path="/register" component={register} />
           <Route path="/additem" component={additem} />
-          <Route path="/dashboard" component={dashboard} />
           <Route path="/payment" component={payment} />
           
 
