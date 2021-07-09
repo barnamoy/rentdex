@@ -36,7 +36,7 @@ model  rent {
   takerid   Int  
   duration   Int 
   adid      Int    
-  done    Boolean
+  done    Boolean @default(false)
 }
 
 model payment{

@@ -115,7 +115,7 @@ class RentManager
             decodedData=decoded.data
           //console.log(decoded.data) // bar
         });
-                this.con.query("select a.name,a.price,a.imgurl,a.maxduration,a.postedby from advertisement a join rent r on a.id=r.adid where r.takerid=?", [decodedData], (err, result) => {
+                this.con.query("select a.name,a.price,a.imgurl,r.duration,a.maxduration,a.postedby from advertisement a join rent r on a.id=r.adid where r.takerid=?", [decodedData], (err, result) => {
                   if (err) {
                     console.log(err)
                   }
