@@ -12,6 +12,7 @@ class AdvertisementManager {
             host: "localhost",
             port: "3306",
             user: "root",
+            password : 'password',
             database: "rentdex_db",
         });
         this.con.connect(function (err) {
@@ -69,6 +70,7 @@ class AdvertisementManager {
         host: "localhost",
         port: "3306",
         user: "root",
+        password:'password',
         database: "rentdex_db",
     });
     this.con.connect(function (err) {

@@ -2,8 +2,8 @@ import React from 'react';
 import './App.css';
 import Header from './header/Header'
 import Footer from './footer/Footer'
-import Body from './body/Body.jsx'
-import Product from './product/product'
+import Body from './body/HomePageUI.jsx'
+import Product from './product/AdvertisementUI'
 import Login from './login/login'
 import register from './register/register'
 
@@ -14,7 +14,7 @@ import { useState, useRef } from 'react'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Store from './mystore'
-import additem from './additem/additem'
+import additem from './additem/postAdvertisementUI'
 import payment from './payment/payment';
 
 
@@ -48,10 +48,8 @@ function App(props) {
           <Route path="/payment" component={payment} />
           
 
-          <Route path="/">
-            <Body />
-          </Route>
-
+          <Route path="/" component={Body}/>
+            
         </Switch>
         <SideDrawer />
         <Footer />
