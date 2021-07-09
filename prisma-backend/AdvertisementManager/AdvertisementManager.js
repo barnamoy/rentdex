@@ -3,22 +3,23 @@ var jwt = require("jsonwebtoken");
 const { PrismaClient } = require('@prisma/client')
 
 class AdvertisementManager {
-  constructor() {
+  constructor(connectionofmysql) {
     this.prisma = new PrismaClient()
+    this.con = connectionofmysql
   }
 
   getAdvertisementById(req, res) {
-    this.con = mysql.createConnection({
-      host: "localhost",
-      port: "3306",
-      user: "root",
-      password: "Manager@2021",
-      database: "rentdex_db",
-    });
-    this.con.connect(function (err) {
-      if (err) throw err;
-      console.log(" sql db Connected!");
-    });
+    // this.con = mysql.createConnection({
+    //   host: "localhost",
+    //   port: "3306",
+    //   user: "root",
+    //   password: "password",
+    //   database: "rentdex_db",
+    // });
+    // this.con.connect(function (err) {
+    //   if (err) throw err;
+    //   console.log(" sql db Connected!");
+    // });
     if (req.query.id === undefined) {
       res.send("null");
       return;
@@ -66,17 +67,17 @@ class AdvertisementManager {
     }
   }
   getAllAdvertisement(req, res) {
-    this.con = mysql.createConnection({
-      host: "localhost",
-      port: "3306",
-      user: "root",
-      password: "Manager@2021",
-      database: "rentdex_db",
-    });
-    this.con.connect(function (err) {
-      if (err) throw err;
-      console.log(" sql db Connected!");
-    });
+    // this.con = mysql.createConnection({
+    //   host: "localhost",
+    //   port: "3306",
+    //   user: "root",
+    //   password: "password",
+    //   database: "rentdex_db",
+    // });
+    // this.con.connect(function (err) {
+    //   if (err) throw err;
+    //   console.log(" sql db Connected!");
+    // });
     if (req.query.search === "" || req.query.search == undefined) {
       this.con.query("select * from Advertisement", (err, result) => {
         if (err) throw err;

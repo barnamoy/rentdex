@@ -26,7 +26,7 @@ var con = mysql.createConnection({
   host: "localhost",
   port: "3306",
   user: "root",
-  password:"Manager@2021",
+  password:"password",
   database: "rentdex_db",
 });
 
@@ -69,7 +69,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/getadvertisementbyid", (req, res) => {
-  let ad = new AdvertisementManager()
+  let ad = new AdvertisementManager(con)
   ad.getAdvertisementById(req,res)
 });
 app.get("/getrentbyid", (req, res) => {
@@ -93,12 +93,12 @@ app.post("/addrent", (req, res) => {
 
 
 app.get("/items", (req, res) => {
-  let ad =new AdvertisementManager()
+  let ad =new AdvertisementManager(con)
   ad.getAllAdvertisement(req,res)
 });
 
 app.post('/items', upload.single('productimg'), async (req, res, next) => {
-  let ad = new AdvertisementManager()
+  let ad = new AdvertisementManager(con)
   ad.addAdvertisement(req,res)
 })
 

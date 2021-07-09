@@ -68,7 +68,7 @@ class RentManager {
       host: "localhost",
       port: "3306",
       user: "root",
-      password: "Manager@2021",
+      password: "password",
       database: "rentdex_db",
     });
     this.con.connect(function (err) {
@@ -98,7 +98,7 @@ class RentManager {
       host: "localhost",
       port: "3306",
       user: "root",
-      password: "Manager@2021",
+      password: "password",
       database: "rentdex_db",
     });
     this.con.connect(function (err) {
@@ -112,7 +112,7 @@ class RentManager {
       decodedData = decoded.data
       //console.log(decoded.data) // bar
     });
-    this.con.query("select a.name,a.price,a.imgurl,r.duration,a.maxduration,a.postedby from advertisement a join rent r on a.id=r.adid where r.takerid=?", [decodedData], (err, result) => {
+    this.con.query("select a.name,a.price,a.imgurl,r.duration,a.maxduration,a.postedby from Advertisement a join rent r on a.id=r.adid where r.takerid=?", [decodedData], (err, result) => {
       if (err) {
         console.log(err)
       }
